@@ -91,9 +91,9 @@ docker run -d \
 
 Open **http://YOUR_DOCKER_HOST:8088**. For host-only access, replace `--publish 8088:8080` with `--publish 127.0.0.1:8088:8080`.
 
-## Connect my mixer
+## Connect your mixer
 
-Every fresh installation starts in **Demo mode** with `127.0.0.1` as a placeholder. No personal mixer address is embedded in the source, and demo controls do not send commands to hardware.
+Every fresh installation starts in **Demo mode** with `127.0.0.1` as a placeholder.
 
 1. Open **Connection** in the web interface.
 2. Choose **Live mixer** and the correct mixer model.
@@ -104,15 +104,10 @@ Connecting validates the mixer identity; it does not upload demo values. The app
 
 For everyday use, I start with [the controls and automation guide](docs/USAGE.md). The interactive API reference is at `/docs` on the running app.
 
-## Portainer
-
-I can use the same [compose.github.yaml](compose.github.yaml) in **Stacks → Add stack → Web editor** on a Docker Standalone environment. Paste the complete file, name the stack, and deploy it. The Docker builder must be able to reach GitHub. Portainer's [stack documentation](https://docs.portainer.io/user/docker/stacks/add) covers the editor and environment variables.
-
-If the environment does not support building a stack, I build the image on that Docker host with the `docker build` command above, replace the service's `build` section with `image: xair-control:local`, and deploy that definition instead. Docker Swarm stack deployment requires a prebuilt image; the build-based file is intended for Docker Compose/Standalone.
 
 ## Ports, storage, and networking
 
-I publish only the web port. The container initiates OSC traffic to the mixer on UDP 10024; the network must allow its reply traffic. Bridge networking is the default, and no published UDP port is required.
+The Container publishes only the web port. The container initiates OSC traffic to the mixer on UDP 10024; the network must allow its reply traffic. Bridge networking is the default, and no published UDP port is required.
 
 For Compose, copy [.env.example](.env.example) to `.env` and adjust:
 
@@ -121,11 +116,11 @@ WEB_PORT=8088
 BIND_ADDRESS=0.0.0.0
 ```
 
-`0.0.0.0` listens on the host's interfaces. I use `127.0.0.1` when only the Docker host or a local reverse proxy should reach the app. If the mixer is on another VLAN, the host needs a route and appropriate firewall rules.
+`0.0.0.0` listens on the host's interfaces. Use `127.0.0.1` when only the Docker host or a local reverse proxy should reach the app. If the mixer is on another VLAN, the host needs a route and appropriate firewall rules.
 
 The container runs as user ID **10001**, drops Linux capabilities, and uses a read-only root filesystem. `/data` stores `settings.json`, `hooks.json`, and `layouts.json`; `/tmp` is temporary. Compose names the volume using the project/stack name, usually `xair-control_xair-data`. The `docker run` example uses `xair-control-data`.
 
-I run **one app instance and one backend worker per configuration**. The process owns the mixer session and JSON storage. Multiple browser clients can use that instance. Recent activity and demo mixer values reset on restart; saved connections, layouts, and hooks persist.
+**ONE app instance and one backend worker per configuration**. The process owns the mixer session and JSON storage. Multiple browser clients can use that instance. Recent activity and demo mixer values reset on restart; saved connections, layouts, and hooks persist.
 
 ## Updates, backups, and moving servers
 
@@ -138,7 +133,7 @@ docker compose -f compose.github.yaml up -d
 
 For a local checkout, run `git pull`, then `docker compose up -d --build`. For `docker run`, rebuild the image, stop and remove the old container, then repeat the run command using the **same named volume**.
 
-I back up the `/data` volume before updates or migration. Stop the app for a consistent copy, archive the volume with the Docker host's backup tooling, and restore it into the new deployment's data volume. Preserve file ownership, or make restored files writable by UID 10001. Do not share these backups publicly: they contain connection details and webhook tokens.
+Back up the `/data` volume before updates or migration. Stop the app for a consistent copy, archive the volume with the Docker host's backup tooling, and restore it into the new deployment's data volume. Preserve file ownership, or make restored files writable by UID 10001.
 
 `docker compose down` keeps the data volume. **`docker compose down -v` removes it.** Changing the Compose project or Portainer stack name can create a new, empty volume.
 
@@ -166,7 +161,7 @@ python3.12 -m venv .venv
 .venv/bin/python -m pytest -q
 ```
 
-I use an isolated demo stack for the container smoke test so it cannot change a live mix:
+Isolated demo stack for the container smoke test so it cannot change a live mix:
 
 ```sh
 BIND_ADDRESS=127.0.0.1 WEB_PORT=18088 \
@@ -179,10 +174,10 @@ python3 scripts/smoke.py --base-url http://127.0.0.1:18088 \
 docker compose -p xair-smoke down -v
 ```
 
-The backend is FastAPI; the frontend is plain JavaScript/CSS with no Node build step. Runtime Python packages are pinned in `requirements.lock`. I keep local settings, data, caches, and hardware screenshots out of Git. See [validation](docs/VALIDATION.md) for the testing boundary and [third-party notices](THIRD_PARTY_NOTICES.md) for dependencies and references.
+The backend is FastAPI; the frontend is plain JavaScript/CSS with no Node build step. Runtime Python packages are pinned in `requirements.lock`.  See [validation](docs/VALIDATION.md) for the testing boundary and [third-party notices](THIRD_PARTY_NOTICES.md) for dependencies and references.
 
 ## License
 
-I release this project under the [MIT license](LICENSE). Anyone may use, modify, distribute, sublicense, and sell it, provided the copyright and license notice are retained. It comes without warranty.
+This project is released under the [MIT license](LICENSE). Anyone may use, modify, distribute, sublicense, and sell it, provided the copyright and license notice are retained. It comes without warranty.
 
 This is an independent project, not an official Behringer or Midas application.

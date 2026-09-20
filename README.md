@@ -21,7 +21,7 @@ I keep the interface login-free for trusted local networks. **Anyone who can rea
 
 I include a [companion Stream Deck+ plugin](streamdeck/README.md) for physical fader control: turn to adjust volume, press to toggle mute, and hold while turning for fine adjustments. Its touch display follows the mixer name, level, and mute state. It connects to the existing web API, so a production server does not need another service.
 
-Download the [direct-install plugin](streamdeck/releases/com.dylanmaniatakes.xair-control.streamDeckPlugin), double-click it, and add **X AIR Control → Mixer Fader** to a dial. No Marketplace publication or webhook-capable dial action is needed. The plugin guide covers setup, building, and the current testing limits.
+Download the [direct-install plugin](streamdeck/releases/com.dylanmaniatakes.xair-control.streamDeckPlugin), double-click it, and add **X AIR Control → Mixer Fader** to a dial. The plugin guide covers setup, building, and the current testing limits.
 
 ## Requirements
 

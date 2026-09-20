@@ -1,0 +1,23 @@
+{
+  "name": "xair-control-streamdeck",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "npm run build && node --test tests/*.test.js",
+    "validate": "npm run build && streamdeck validate com.dylanmaniatakes.xair-control.sdPlugin",
+    "pack": "npm run build && streamdeck pack com.dylanmaniatakes.xair-control.sdPlugin --output releases --force --no-update-check && node scripts/checksum.mjs"
+  },
+  "dependencies": {
+    "ws": "8.21.3"
+  },
+  "devDependencies": {
+    "@elgato/cli": "1.9.0",
+    "esbuild": "0.28.2"
+  }
+}

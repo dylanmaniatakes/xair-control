@@ -46,12 +46,14 @@ The decoder follows the X AIR bank layout (40 little-endian signed 16-bit values
 
 ## Webhooks and Stream Deck
 
+For Stream Deck+ dials, I use the [companion plugin](../streamdeck/README.md), which talks directly to the API. The webhook workflow below is for buttons or other HTTP-capable clients.
+
 1. Open **Webhooks → New webhook**.
 2. Choose a channel/module and control, then **Set value**, **Toggle**, or **Adjust by**.
 3. Copy the generated private URL.
 4. Configure a Stream Deck HTTP-request action to send **POST** to that URL. It needs no request body or authentication header.
 
-For a plugin that only opens URLs, enable **Allow GET requests** when creating the webhook. GET is otherwise rejected. Use the Docker host’s reachable LAN IP instead of `localhost` for buttons on other computers. No Stream Deck plugin is bundled.
+For a plugin that only opens URLs, enable **Allow GET requests** when creating the webhook. GET is otherwise rejected. Use the Docker host’s reachable LAN IP instead of `localhost` for buttons on other computers. The companion dial plugin does not require webhooks.
 
 A webhook URL is a bearer secret. Delete it to revoke access. Hooks are bound to their model and mode, and live hooks also to the mixer IP/port. Demo hooks cannot operate a live connection. Recreate a hook after changing its connection target. Toggle/increment actions are not idempotent: disable automatic HTTP retries for these actions. Explicit set actions are a better choice when retries are unavoidable.
 

@@ -39,3 +39,8 @@ Thumbs.db
 
 # Local hardware screenshot; public docs use demo data instead
 /docs/mixer-desktop.png
+
+# Rebuilt Stream Deck runtime; the release installer is staged separately.
+/streamdeck/*.sdPlugin/bin/
+/streamdeck/*.sdPlugin/LICENSE
+/streamdeck/*.sdPlugin/WS-LICENSE

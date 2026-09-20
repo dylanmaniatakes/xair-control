@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.dylanmaniatakes.xair-control",
+  "Name": "X AIR Control",
+  "Author": "Dylan Maniatakes",
+  "Description": "Control X AIR mixer faders and mute from Stream Deck+ dials through your local X AIR Control server.",
+  "Version": "1.0.1.0",
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.6"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "13"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20"
+  },
+  "CodePath": "bin/plugin.cjs",
+  "Icon": "imgs/plugin",
+  "Category": "X AIR Control",
+  "CategoryIcon": "imgs/category",
+  "URL": "https://github.com/DylanManiatakes/xair-control",
+  "Actions": [
+    {
+      "UUID": "com.dylanmaniatakes.xair-control.fader",
+      "Name": "Mixer Fader",
+      "Tooltip": "Turn to adjust level; press to mute; hold and turn for fine adjustments.",
+      "Icon": "imgs/action",
+      "Controllers": [
+        "Encoder"
+      ],
+      "PropertyInspectorPath": "ui/index.html",
+      "Encoder": {
+        "layout": "$B1",
+        "TriggerDescription": {
+          "Rotate": "Adjust fader",
+          "Push": "Toggle mute",
+          "Touch": "Refresh level",
+          "LongTouch": "Refresh level"
+        }
+      },
+      "States": [
+        {
+          "Image": "imgs/action",
+          "TitleAlignment": "middle"
+        }
+      ]
+    }
+  ]
+}

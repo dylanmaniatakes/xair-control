@@ -17,6 +17,12 @@ The backend uses [xair-api-python](https://github.com/onyx-and-iris/xair-api-pyt
 
 I keep the interface login-free for trusted local networks. **Anyone who can reach the web port can control the mixer and manage webhooks.** I do not recommend exposing it directly to the internet.
 
+## Stream Deck+ dials
+
+I include a [companion Stream Deck+ plugin](streamdeck/README.md) for physical fader control: turn to adjust volume, press to toggle mute, and hold while turning for fine adjustments. Its touch display follows the mixer name, level, and mute state. It connects to the existing web API, so a production server does not need another service.
+
+Download the [direct-install plugin](streamdeck/releases/com.dylanmaniatakes.xair-control.streamDeckPlugin), double-click it, and add **X AIR Control → Mixer Fader** to a dial. No Marketplace publication or webhook-capable dial action is needed. The plugin guide covers setup, building, and the current testing limits.
+
 ## Requirements
 
 I use Docker Engine or Docker Desktop with Docker Compose v2. The Docker host needs network access to the mixer. Initial builds also need access to GitHub, Docker Hub, and Python package indexes.

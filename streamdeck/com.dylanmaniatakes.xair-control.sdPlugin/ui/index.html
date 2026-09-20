@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>X AIR Control</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="inspector.js"></script>
+  </head>
+  <body>
+    <h2>X AIR Control</h2>
+    <p>Turn for level · Press for mute<br />Hold + turn for fine adjustment</p>
+    <form id="settings">
+      <label
+        >Server URL<input
+          id="server"
+          type="url"
+          required
+          placeholder="http://your-server:8088"
+          autocomplete="off"
+      /></label>
+      <button type="button" id="discover">Connect & load channels</button>
+      <p id="status" role="status">
+        Enter the address of your X AIR Control web app.
+      </p>
+      <label
+        >Channel<select id="root">
+          <option value="strip.0">Input 1</option>
+        </select></label
+      >
+      <div class="row">
+        <label
+          >dB per tick<input
+            id="step"
+            type="number"
+            min="0.1"
+            max="10"
+            step="0.1"
+            value="1"
+            required /></label
+        ><label
+          >Fine dB per tick<input
+            id="fine"
+            type="number"
+            min="0.1"
+            max="10"
+            step="0.1"
+            value="0.1"
+            required
+        /></label>
+      </div>
+      <button type="submit">Save dial</button>
+    </form>
+    <p class="hint">
+      Use your Docker server address, not the mixer's address. Each dial has its
+      own settings. The bar shows fader position, not live VU level.
+    </p>
+  </body>
+</html>

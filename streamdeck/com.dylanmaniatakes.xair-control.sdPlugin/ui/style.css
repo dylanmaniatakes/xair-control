@@ -1,0 +1,64 @@
+:root {
+  color-scheme: dark;
+  font:
+    12px system-ui,
+    sans-serif;
+  background: #252525;
+  color: #ddd;
+}
+body {
+  margin: 18px;
+}
+h2 {
+  font-size: 18px;
+  color: #e7b168;
+}
+p {
+  line-height: 1.6;
+  color: #aaa;
+}
+label {
+  display: block;
+  margin: 14px 0 7px;
+}
+input,
+select,
+button {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid #555;
+  border-radius: 5px;
+  padding: 9px;
+  background: #333;
+  color: #eee;
+  margin-top: 6px;
+  font: inherit;
+}
+button {
+  cursor: pointer;
+  background: #8b6637;
+  color: white;
+}
+button:disabled {
+  opacity: 0.5;
+}
+.row {
+  display: flex;
+  gap: 12px;
+}
+.row label {
+  width: 50%;
+}
+.hint {
+  font-size: 11px;
+}
+#status {
+  min-height: 36px;
+  overflow-wrap: anywhere;
+}
+input:focus,
+select:focus,
+button:focus {
+  outline: 2px solid #e7b168;
+  outline-offset: 2px;
+}

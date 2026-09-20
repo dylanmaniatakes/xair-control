@@ -1,0 +1,20 @@
+# Standalone deployment: Docker fetches and builds the repository.
+# XAIR_SOURCE can pin a tag or full commit hash after the # character.
+services:
+  xair:
+    build:
+      context: "${XAIR_SOURCE:-https://github.com/DylanManiatakes/xair-control.git#main}"
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:${WEB_PORT:-8088}:8080"
+    volumes:
+      - xair-data:/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+volumes:
+  xair-data:

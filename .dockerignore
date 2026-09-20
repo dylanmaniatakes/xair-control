@@ -1,0 +1,10 @@
+# Only runtime source and its locked dependencies enter the build context.
+**
+!Dockerfile
+!requirements.lock
+!LICENSE
+!THIRD_PARTY_NOTICES.md
+!app/
+!app/**
+app/**/__pycache__/
+app/**/*.pyc

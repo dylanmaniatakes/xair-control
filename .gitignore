@@ -1,0 +1,41 @@
+# Local settings and mixer/webhook data
+.env
+.env.*
+!.env.example
+/data/
+/backups/
+*.backup
+compose.override.yaml
+compose.override.yml
+
+# Python and development tools
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.egg-info/
+build/
+dist/
+node_modules/
+test-results/
+playwright-report/
+*.log
+
+# Editors and operating systems
+.DS_Store
+._*
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local hardware screenshot; public docs use demo data instead
+/docs/mixer-desktop.png

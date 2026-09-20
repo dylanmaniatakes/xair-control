@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>X AIR · Mixer control</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <script defer src="/static/layouts.js"></script>
+    <script defer src="/static/routing.js"></script>
+    <script defer src="/static/app.js"></script>
+    <script defer src="/static/meters.js"></script>
+  </head>
+  <body>
+    <div id="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">X</span> AIR <small>CONTROL</small>
+        </div>
+        <div class="workspace">
+          <span class="device-icon">▥</span>
+          <div>
+            <strong id="device-model">XR12</strong
+            ><small id="device-name">Digital mixing console</small>
+          </div>
+        </div>
+        <span class="nav-label">WORKSPACE</span>
+        <nav id="nav">
+          <button data-view="mixer" class="active"><span>▥</span> Mixer</button
+          ><button data-view="sends"><span>↗</span> Sends &amp; buses</button
+          ><button data-view="effects"><span>⌁</span> FX rack</button
+          ><button data-view="groups"><span>▦</span> Groups</button
+          ><button data-view="controls"><span>☷</span> All controls</button
+          ><span class="nav-label">CONNECT & AUTOMATE</span
+          ><button data-view="hooks"><span>⌘</span> Webhooks</button
+          ><button data-view="osc"><span>›_</span> OSC console</button
+          ><button data-view="settings"><span>⚙</span> Connection</button>
+        </nav>
+        <div class="sidebar-bottom">
+          <span class="tiny-dot"></span
+          ><span>Local control. Your network.</span>
+        </div>
+      </aside>
+      <div class="main">
+        <header>
+          <div class="breadcrumb">
+            Workspace <span>/</span> <strong id="crumb">Mixer</strong>
+          </div>
+          <div class="header-right">
+            <span id="connection-status" class="badge">Demo mode</span
+            ><button id="refresh" class="quiet">↻ Refresh</button>
+          </div>
+        </header>
+        <main id="content"><p>Loading mixer state…</p></main>
+        <footer>
+          <span id="foot-status">Connecting to your console…</span
+          ><span>X AIR CONTROL <b>•</b> LOCAL FIRST</span>
+        </footer>
+      </div>
+    </div>
+    <div id="toast" role="status" hidden></div>
+    <dialog id="hook-dialog">
+      <form id="hook-form">
+        <div class="section-heading">
+          <h2>Create webhook</h2>
+          <button type="button" id="close-hook" class="quiet">✕</button>
+        </div>
+        <p>
+          A private URL for your Stream Deck, Home Assistant, or any HTTP
+          client.
+        </p>
+        <label
+          >Name<input
+            id="hook-name"
+            required
+            maxlength="60"
+            placeholder="Mute microphone" /></label
+        ><label>Channel or module<select id="hook-target"></select></label
+        ><label>Control<select id="hook-path"></select></label
+        ><label
+          >Action<select id="hook-operation">
+            <option value="set">Set value</option>
+            <option value="toggle">Toggle</option>
+            <option value="increment">Adjust by</option>
+          </select></label
+        >
+        <div id="hook-value"></div>
+        <label class="check"
+          ><input id="hook-get" type="checkbox" />Allow GET requests (for
+          URL-only buttons)</label
+        >
+        <p class="muted">
+          The URL is a secret. Anyone with it can trigger this action.
+        </p>
+        <button class="primary">Create webhook</button>
+      </form>
+    </dialog>
+  </body>
+</html>

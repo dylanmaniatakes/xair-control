@@ -1,0 +1,17 @@
+services:
+  xair:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:${WEB_PORT:-8088}:8080"
+    volumes:
+      - xair-data:/data
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp
+volumes:
+  xair-data:

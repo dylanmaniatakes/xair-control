@@ -503,6 +503,7 @@ async function refresh() {
   }
 }
 function paint() {
+  paintSendControls();
   const focused = document.activeElement;
   $$("[data-field]").forEach((e) => {
     const p = e.dataset.field;
@@ -529,7 +530,8 @@ function paint() {
   });
   $$("[data-fader]").forEach((e) => {
     const p = e.dataset.fader;
-    e.disabled = !(p in values);
+    e.disabled = !(p in values) || sendMutePending.has(p);
+    e.setAttribute("aria-valuetext", db(values[p]) + " dB");
     if (e !== focused && !e.dataset.dragging)
       e.value = dbToPosition(values[p] ?? -90);
   });
@@ -666,6 +668,10 @@ $("#content").addEventListener("click", async (e) => {
   const b = e.target.closest("button");
   if (!b) return;
   const d = b.dataset;
+  if (d.sendMute) {
+    await toggleSendLevel(d.sendMute);
+    return;
+  }
   if (d.sendPage) {
     sendPage = d.sendPage;
     render();

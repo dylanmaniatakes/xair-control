@@ -102,11 +102,44 @@ function friendlyControl(path, label) {
 function controlSection(heading, description, body) {
   return `<section class="card workflow-card"><h2>${esc(heading)}</h2><p class="muted">${esc(description)}</p>${body}</section>`;
 }
+// Restore levels belong to this browser session and this mixer connection.
+const sendRestoreLevels = new Map();
+const sendMutePending = new Set();
+function sendMemoryKey(path) {
+  return JSON.stringify([status.mode, status.model, status.ip, status.port, path]);
+}
+async function toggleSendLevel(path) {
+  if (sendMutePending.has(path) || !Number.isFinite(values[path])) return;
+  const key = sendMemoryKey(path), level = values[path];
+  if (level > -90) sendRestoreLevels.set(key, level);
+  const target = level > -90 ? -90 : sendRestoreLevels.get(key);
+  if (!Number.isFinite(target)) return;
+  sendMutePending.add(path);
+  paint();
+  try { await send(path, "set", target); }
+  finally { sendMutePending.delete(path); paint(); }
+}
+function paintSendControls() {
+  $$("[data-send-mute]").forEach((button) => {
+    const path = button.dataset.sendMute, level = values[path];
+    const known = Number.isFinite(level), silent = known && level <= -90;
+    const restorable = sendRestoreLevels.has(sendMemoryKey(path));
+    button.disabled = !known || sendMutePending.has(path) || (silent && !restorable);
+    button.classList.toggle("muted", silent);
+    button.setAttribute("aria-pressed", String(silent));
+    button.textContent = !known ? "Unavailable" : silent ? (restorable ? "UNMUTE SEND" : "SEND OFF") : "MUTE SEND";
+    button.title = silent && !restorable ? "Raise the slider to set a send level." : "Mute only this source's send to the selected destination.";
+    button.closest(".send-strip").classList.toggle("send-off", silent);
+  });
+}
 function sourceControls(index, kinds) {
   const list = Layouts.visible(
     kinds.flatMap((k) => (k === "auxreturn" ? [k] : roots(k))),
-  );
-  return `<div class="control-grid">${list.map((r) => friendlyControl(`${r}.send.${index}.level`, displayRoot(r))).join("") || "<p>No visible sources. Use Edit layout to show channels.</p>"}</div>`;
+  ).filter(r => meta[`${r}.send.${index}.level`]);
+  return `<div class="send-grid">${list.map(r => {
+    const path = `${r}.send.${index}.level`;
+    return `<article class="send-strip"><div class="send-heading"><div><h3>${esc(displayRoot(r))}</h3><small>${esc(labelRoot(r))} → ${esc(sendName(index))}</small></div><output data-db="${path}">— dB</output></div><label class="send-slider-label"><span class="sr-only">${esc(displayRoot(r))} send to ${esc(sendName(index))}</span><input class="send-slider" type="range" min="0" max="1" step="0.0025" data-fader="${path}" disabled></label><div class="send-scale" aria-hidden="true"><span>−∞</span><span>−30</span><span>−10</span><span>+10 dB</span></div><div class="send-actions"><button class="mute-btn" data-send-mute="${path}" disabled>Loading…</button><span>Send level only</span></div><div class="control-error" data-error="${path}"></div></article>`;
+  }).join("") || "<p>No visible sources. Use Edit layout to show channels.</p>"}</div><p class="hint">Mute send lowers only this send to −∞. Unmute restores its previous level for this browser session. If a send was already off, raise its slider to choose a level. The input's main fader and other sends are unchanged.</p>`;
 }
 function renderBusWorkspace(c) {
   const n = roots("bus").length;
@@ -148,6 +181,10 @@ function renderBusWorkspace(c) {
     .join(
       "",
     )}</select></label><span class="hint">${isBus ? "Processing here affects the whole bus mix." : "Send channels into this shared effect, then blend its return."}</span></div><div class="signal-flow"><span>Input sends</span><b>→</b><span>${esc(sendName(i))}</span><b>→</b><span>${isBus ? "Bus output" : "Effect → stereo return"}</span></div><div class="destination-workspace"><aside class="destination-master">${strip(root)}<small>Destination master level</small></aside><div class="destination-body"><div class="detail-tabs">${pages.map(([key, label]) => `<button data-send-page="${key}" class="${key === sendPage ? "active" : ""}">${label}</button>`).join("")}</div><div id="destination-panel"></div></div></div>`;
+  $("#send-dest").closest(".toolbar").insertAdjacentHTML("afterend", `<div class="destination-shortcuts" role="group" aria-label="Switch send destination">${destinations.map(id => {
+    const index = Number(id.split(".")[1]);
+    return `<button class="quiet ${index === i ? "active" : ""}" aria-pressed="${index === i}" data-open-send="${index}">${esc(sendName(index))}</button>`;
+  }).join("")}</div>`);
   const panel = $("#destination-panel");
   if (sendPage === "sources")
     panel.innerHTML = controlSection(
